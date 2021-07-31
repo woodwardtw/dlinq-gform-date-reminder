@@ -202,7 +202,7 @@ add_shortcode( 'dlinq-date', 'dlinq_date_reminder' );
 
 function reminderEmail($title, $url, $to, $name){
    $subject = $title . ' reminder';
-   $message = "Hi {$name},</br> You signed up for {$title}";
+   $message = "Hi {$name},</br> </br> You signed up for {$title} http://foo.com";
    wp_mail($to, $subject, $message );
 
 }
@@ -212,3 +212,29 @@ function wpdocs_set_html_mail_content_type() {
 }
 add_filter( 'wp_mail_content_type', 'wpdocs_set_html_mail_content_type' );
 
+
+add_shortcode( 'dlinq-report', 'dlinq_reg_report' );
+
+function dlinq_reg_report(){
+  $form_id = 1;//FORM ID
+  $search_criteria = null;
+  $sorting = null; 
+  $paging = null;
+  $entries = GFAPI::get_entries($form_id, $search_criteria, $sorting, $paging, $total_count );
+  $vid_annotation = [];
+  // $geo_mapping = [];
+  // $stu_thread = [];
+  $attendance = [];
+  $choices = ['5.1','5.2', '5.3', '5.4', '6.1', '6.2', '6.3', '6.4', '7.1', '7.2', '7.3', '7.4', '9.1'];
+  foreach($choices as $key => $choice){
+      foreach ($entries as $key => $value) {  
+      $name  = $value['1.3'] . ' ' . $value['1.6'];
+         if($value[$choice] && $value['5.1']){
+            
+            array_push($vid_annotation, $name);        
+         }  
+      } 
+  }
+  
+   var_dump($vid_annotation);
+}
