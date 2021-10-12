@@ -203,7 +203,7 @@ add_shortcode( 'dlinq-date', 'dlinq_date_reminder' );
 function reminderEmail($title, $url, $to, $name){
    $subject = $title . ' reminder';
    $message = "Hi {$name},</br> </br> You signed up for {$title} http://foo.com";
-   wp_mail($to, $subject, $message );
+   //wp_mail($to, $subject, $message );
 
 }
 
@@ -225,16 +225,24 @@ function dlinq_reg_report(){
   // $geo_mapping = [];
   // $stu_thread = [];
   $attendance = [];
-  $choices = ['5.1','5.2', '5.3', '5.4', '6.1', '6.2', '6.3', '6.4', '7.1', '7.2', '7.3', '7.4', '9.1'];
+  $choices = ['5.0', '5.1', '5.2', '5.3', '6.0', '6.1', '6.2', '7.0', '7.1', '7.2', '7.3', '7.4', '9.0'];
   foreach($choices as $key => $choice){
       foreach ($entries as $key => $value) {  
       $name  = $value['1.3'] . ' ' . $value['1.6'];
-         if($value[$choice] && $value['5.1']){
-            
+         if( $value['5.1']){ 
             array_push($vid_annotation, $name);        
          }  
       } 
   }
-  
+   echo textGet(1, $choice);
    var_dump($vid_annotation);
+   
+}
+
+function textGet($form_id, $field_id){
+   $raw = explode('.', $field_id);
+   
+   $field = GFFormsModel::get_field( $form_id, $raw[0] );
+   $name = $field->choices[$raw[1]]['text'];
+   return $name;
 }
